@@ -1,110 +1,79 @@
-#include<stdio.h>
-# define MAX 5
-int cqueue_arr[MAX];
-int front = -1;
-int rear = -1;
-void insert(int item)
-{
-if((front == 0 && rear == MAX-1) || (front == rear+1))
-{
-printf("Queue Overflow n");
-return;
+#include <stdio.h>
+#include <stdlib.h>
+int front = -1, rear = -1;
+
+void insert(int item, int size, int a[]){
+    if(front == (rear+1)%size){
+        printf("Overflow! \n");
+        exit(0);
+    }
+    else{
+        rear = (rear+1) % size;
+        a[rear] = item;
+        if(front == -1){
+            front = 0;
+        }
+    }
 }
-if(front == -1)
-{
-front = 0;
-rear = 0;
+
+int del(int a[], int size){
+    int item;
+    if(front == rear && rear == -1){
+        printf("Underflow \n");
+        return 0;
+    }
+    else{
+        item = a[front];
+        if(front == rear){
+            front = -1, rear = -1;
+        }
+        else
+            front = (front+1)%size;
+        return item;
+    }
 }
-else
-{
-if(rear == MAX-1)
-rear = 0;
-else
-rear = rear+1;
+
+void display(int a[], int size){
+    int i;
+    if(front == -1)
+        printf("\n Circular Queue is Empty \n");
+    else{
+        i = front;
+        printf("\n Circular Queue: \n");
+        if(front <= rear){
+            while(i <= rear){
+                printf("%d \t", a[i++]);
+            }
+        }
+        else{
+            while(i <= size-1)
+                printf("%d \t", a[i++]);
+            i = 0;
+            while(i <= rear)
+                printf("%d \t", a[i++]);
+        }
+    }
 }
-cqueue_arr[rear] = item ;
-}
-void deletion()
-{
-if(front == -1)
-{
-printf("Queue Underflown");
-return ;
-}
-printf("Element deleted from queue is : %dn",cqueue_arr[front]);
-if(front == rear)
-{
-front = -1;
-rear=-1;
-}
-else
-{
-if(front == MAX-1)
-front = 0;
-else
-front = front+1;
-}
-}
-void display()
-{
-int front_pos = front,rear_pos = rear;
-if(front == -1)
-{
-printf("Queue is emptyn");
-return;
-}
-printf("Queue elements :n");
-if( front_pos <= rear_pos )
-while(front_pos <= rear_pos)
-{
-printf("%d ",cqueue_arr[front_pos]);
-front_pos++;
-}
-else
-{
-while(front_pos <= MAX-1)
-{
-printf("%d ",cqueue_arr[front_pos]);
-front_pos++;
-}
-front_pos = 0;
-while(front_pos <= rear_pos)
-{
-printf("%d ",cqueue_arr[front_pos]);
-front_pos++;
-}
-}
-printf("n");
-}
-int main()
-{
-int choice,item;
-do
-{
-printf("1.Insertn");
-printf("2.Deleten");
-printf("3.Displayn");
-printf("4.Quitn");
-printf("Enter your choice : ");
-scanf("%d",&choice);
-switch(choice)
-{
-case 1 :
-printf("Input the element for insertion in queue : ");
-scanf("%d", &item);
-insert(item);
-break;
-case 2 :
-deletion();
-break;
-case 3:
-display();
-break;
-case 4:
-break;
-default:
-printf("Wrong choicen");
-}
-}while(choice!=4);
-return 0;
+
+int main(){
+    int item, choice, size;
+    printf("Enter the size of the queue: ");
+    scanf("%d", &size);
+    int a[size];
+    printf("1. Enqueue \n 2. Dequeue \n 3. Display \n 4. Exit \n");
+    while(1){
+        printf("\n Choice: ");
+        scanf("%d", &choice);
+        switch(choice){
+            case 1: printf("\n Enter item: ");
+                    scanf("%d", &item);
+                    insert(item, size, a);
+                    break;
+            case 2: printf("\n Deleted element: %d", del(a, size));
+                    break;
+            case 3: display(a, size);
+                    break;
+            case 4: exit(0);
+        }
+    }
 }
